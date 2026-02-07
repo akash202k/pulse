@@ -1,7 +1,11 @@
 services:
  - name: app1
-   health: /app1/health
-   duration: 20s
+   url: /app1/health
+   interval: 20s
  - name: app2
-   health: /app2/health
-   duration: 10s
+   url: /app2/health
+   interval: 10s
+
+SLO:
+  availability: 10
+  latencyp95: 5s
