@@ -1,6 +1,6 @@
 services:
  - name: app1
-   url: /app1/health
+   url: http://api.open-notify.org/iss-now.json
    interval: 20s
  - name: app2
    url: /app2/health
@@ -8,4 +8,4 @@ services:
 
 SLO:
   availability: 99.9
-  latency_p95: 5s
+  latency_p95: 300ms
