@@ -8,7 +8,7 @@ type Service struct {
 	Interval time.Duration
 }
 
-type Probesult struct {
+type ProbeResult struct {
 	Service   string
 	Timestamp time.Time
 	Success   bool
