@@ -1,0 +1,7 @@
+services:
+ - name: app1
+   health: /app1/health
+   duration: 20s
+ - name: app2
+   health: /app2/health
+   duration: 10s
