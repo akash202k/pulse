@@ -7,5 +7,5 @@ services:
    interval: 10s
 
 SLO:
-  availability: 10
-  latencyp95: 5s
+  availability: 99.9
+  latency_p95: 5s

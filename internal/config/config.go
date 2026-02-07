@@ -19,7 +19,11 @@ func Load(path string) (*Config, error) {
 	}
 
 	var cfg Config
-	if err := yaml.Unmarshal(data, &cfg); err != nil {
+	// if err := yaml.Unmarshal(data, &cfg); err != nil {
+	// 	return nil, err
+	// }
+	err = yaml.Unmarshal(data, &cfg)
+	if err != nil {
 		return nil, err
 	}
 

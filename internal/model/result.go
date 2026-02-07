@@ -18,5 +18,5 @@ type ProbeResult struct {
 
 type SLO struct {
 	Availability float64
-	LatencyP95   time.Duration
+	LatencyP95   time.Duration `yaml:"latency_p95"`
 }
