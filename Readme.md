@@ -159,4 +159,4 @@ pulse/
 
 # Dashboard
 
-image.png
+![alt text](image.png)
