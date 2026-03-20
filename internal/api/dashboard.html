@@ -29,6 +29,64 @@
 			border-radius: 12px;
 			box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 			margin-bottom: 30px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.header-info h1 {
+			color: #333;
+			margin-bottom: 10px;
+			font-size: 32px;
+		}
+
+		.header-info p {
+			color: #666;
+			font-size: 14px;
+		}
+
+		.refresh-btn {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			color: white;
+			border: none;
+			padding: 12px 24px;
+			border-radius: 8px;
+			font-size: 14px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			white-space: nowrap;
+		}
+
+		.refresh-btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+		}
+
+		.refresh-btn:active {
+			transform: translateY(0);
+		}
+
+		.refresh-btn.loading {
+			opacity: 0.7;
+			cursor: not-allowed;
+		}
+
+		.spinner {
+			display: inline-block;
+			width: 14px;
+			height: 14px;
+			border: 2px solid rgba(255,255,255,0.3);
+			border-top: 2px solid white;
+			border-radius: 50%;
+			animation: spin 0.6s linear infinite;
+		}
+
+		@keyframes spin {
+			to { transform: rotate(360deg); }
 		}
 
 		header h1 {
@@ -233,8 +291,14 @@
 <body>
 	<div class="container">
 		<header>
-			<h1>📊 Pulse - SLO Dashboard</h1>
-			<p>Generated: {{.GeneratedAt}}</p>
+			<div class="header-info">
+				<h1>📊 Pulse - SLO Dashboard</h1>
+				<p>Generated: {{.GeneratedAt}}</p>
+			</div>
+			<button class="refresh-btn" onclick="refreshDashboard()">
+				<span class="spinner" id="spinner" style="display:none;"></span>
+				<span id="btn-text">🔄 Refresh</span>
+			</button>
 		</header>
 
 		<div class="summary">
@@ -267,7 +331,45 @@
 
 	<script>
 		// Auto-refresh every 10 seconds
-		setTimeout(() => location.reload(), 10000);
+		let autoRefreshInterval = setInterval(() => location.reload(), 10000);
+
+		function refreshDashboard() {
+			const btn = document.querySelector('.refresh-btn');
+			const spinner = document.getElementById('spinner');
+			const btnText = document.getElementById('btn-text');
+
+			// Disable button and show spinner
+			btn.disabled = true;
+			btn.classList.add('loading');
+			spinner.style.display = 'inline-block';
+			btnText.textContent = 'Refreshing...';
+
+			// Fetch latest data
+			fetch('/api/report')
+				.then(response => response.json())
+				.then(data => {
+					// Reload the page with fresh data
+					location.reload();
+				})
+				.catch(error => {
+					console.error('Error refreshing:', error);
+					// Re-enable button
+					btn.disabled = false;
+					btn.classList.remove('loading');
+					spinner.style.display = 'none';
+					btnText.textContent = '🔄 Refresh';
+					alert('Error refreshing dashboard. Please try again.');
+				});
+		}
+
+		// Clear interval when user manually refreshes
+		document.addEventListener('visibilitychange', function() {
+			if (document.hidden) {
+				clearInterval(autoRefreshInterval);
+			} else {
+				autoRefreshInterval = setInterval(() => location.reload(), 10000);
+			}
+		});
 	</script>
 </body>
 </html>

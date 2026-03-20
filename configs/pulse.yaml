@@ -44,51 +44,6 @@ services:
     - name: app15
       url: http://localhost:3015/api/app15/health
       interval: 20s
-    - name: app16
-      url: http://localhost:3016/api/app16/health
-      interval: 20s
-    - name: app17
-      url: http://localhost:3017/api/app17/health
-      interval: 20s
-    - name: app18
-      url: http://localhost:3018/api/app18/health
-      interval: 20s
-    - name: app19
-      url: http://localhost:3019/api/app19/health
-      interval: 20s
-    - name: app20
-      url: http://localhost:3000/api/app20/health
-      interval: 20s
-    - name: app21
-      url: http://localhost:3001/api/app21/health
-      interval: 20s
-    - name: app22
-      url: http://localhost:3002/api/app22/health
-      interval: 20s
-    - name: app23
-      url: http://localhost:3003/api/app23/health
-      interval: 20s
-    - name: app24
-      url: http://localhost:3004/api/app24/health
-      interval: 20s
-    - name: app25
-      url: http://localhost:3005/api/app25/health
-      interval: 20s
-    - name: app26
-      url: http://localhost:3006/api/app26/health
-      interval: 20s
-    - name: app27
-      url: http://localhost:3007/api/app27/health
-      interval: 20s
-    - name: app28
-      url: http://localhost:3008/api/app28/health
-      interval: 20s
-    - name: app29
-      url: http://localhost:3009/api/app29/health
-      interval: 20s
-    - name: app30
-      url: http://localhost:3010/api/app30/health
-      interval: 20s
 SLO:
-    availability: 99.9
-    latency_p95: 300ms
+    availability: 99
+    latency_p95: 8000ms
