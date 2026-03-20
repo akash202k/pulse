@@ -10,6 +10,8 @@ SLO (Service Level Objective) monitoring system written in Go. Continuously prob
 - **SLO Evaluation**: Real-time validation against defined targets
 - **Persistent Storage**: SQLite database for all probe results and metrics
 - **REST API**: Query metrics, SLO status, and historical probe data
+- **Beautiful Dashboard**: Real-time HTML dashboard with SLO compliance visualization
+- **Reporting**: JSON API for compliance reports directly from database
 - **Graceful Shutdown**: Signal handling for clean termination
 
 ## Quick Start
@@ -50,6 +52,9 @@ The application will:
 - `GET /api/slo` - Get all latest SLO statuses
 - `GET /api/slo/{serviceName}` - Get SLO status for a service
 - `GET /api/probes/{serviceName}` - Get recent probe results (last 100)
+- `GET /api/report` - Get compliance report (JSON) with all service details
+- `GET /api/report/json` - Download compliance report as JSON file
+- `GET /dashboard` - View real-time HTML dashboard with compliance metrics
 
 ### Example Queries
 ```bash
@@ -62,9 +67,23 @@ curl http://localhost:9090/api/metrics/app1
 # Get all SLO statuses
 curl http://localhost:9090/api/slo | jq .
 
+# Get compliance report
+curl http://localhost:9090/api/report | jq .
+
 # Get probe history
 curl http://localhost:9090/api/probes/app1 | jq .
+
+# View dashboard in browser
+open http://localhost:9090/dashboard
 ```
+
+### Dashboard Features
+The dashboard (`/dashboard`) provides a real-time view of SLO compliance:
+- **Summary cards** - Total services, compliance rate, met/failed counts
+- **Service cards** - Individual availability and latency status for each service
+- **Health indicators** - Color-coded (✓/✗) visual feedback
+- **Auto-refresh** - Updates every 60 seconds automatically
+- **Responsive design** - Works on desktop and mobile devices
 
 ## Architecture
 
@@ -76,7 +95,9 @@ curl http://localhost:9090/api/probes/app1 | jq .
 - **SLI Calculator** - Computes availability and latency percentiles
 - **SLO Evaluator** - Validates metrics against targets
 - **Storage** - Interface for persisting metrics (SQLite implementation)
-- **API Server** - REST endpoints for metrics queries
+- **Report Generator** - Creates compliance reports from database metrics
+- **API Server** - REST endpoints for metrics queries and dashboard
+- **Dashboard** - Real-time HTML dashboard with visual SLO compliance
 
 ### Data Flow
 ```
@@ -119,8 +140,12 @@ pulse/
 │   ├── slo/                # SLO evaluation
 │   │   └── slo.go
 │   │
-│   └── api/                # HTTP API
-│       └── server.go
+│   ├── report/             # Report generation
+│   │   └── report.go       # Compliance reports from DB
+│   │
+│   └── api/                # HTTP API & Dashboard
+│       ├── server.go       # API endpoints
+│       └── dashboard.go    # HTML dashboard generator
 │
 ├── test/
 │   └── test-server.js      # Dummy test servers
