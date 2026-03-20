@@ -1,11 +1,94 @@
 services:
- - name: app1
-   url: http://api.open-notify.org/iss-now.json
-   interval: 20s
- - name: app2
-   url: /app2/health
-   interval: 10s
-
+    - name: app1
+      url: http://localhost:3001/api/app1/health
+      interval: 20s
+    - name: app2
+      url: http://localhost:3002/api/app2/health
+      interval: 20s
+    - name: app3
+      url: http://localhost:3003/api/app3/health
+      interval: 20s
+    - name: app4
+      url: http://localhost:3004/api/app4/health
+      interval: 20s
+    - name: app5
+      url: http://localhost:3005/api/app5/health
+      interval: 20s
+    - name: app6
+      url: http://localhost:3006/api/app6/health
+      interval: 20s
+    - name: app7
+      url: http://localhost:3007/api/app7/health
+      interval: 20s
+    - name: app8
+      url: http://localhost:3008/api/app8/health
+      interval: 20s
+    - name: app9
+      url: http://localhost:3009/api/app9/health
+      interval: 20s
+    - name: app10
+      url: http://localhost:3010/api/app10/health
+      interval: 20s
+    - name: app11
+      url: http://localhost:3011/api/app11/health
+      interval: 20s
+    - name: app12
+      url: http://localhost:3012/api/app12/health
+      interval: 20s
+    - name: app13
+      url: http://localhost:3013/api/app13/health
+      interval: 20s
+    - name: app14
+      url: http://localhost:3014/api/app14/health
+      interval: 20s
+    - name: app15
+      url: http://localhost:3015/api/app15/health
+      interval: 20s
+    - name: app16
+      url: http://localhost:3016/api/app16/health
+      interval: 20s
+    - name: app17
+      url: http://localhost:3017/api/app17/health
+      interval: 20s
+    - name: app18
+      url: http://localhost:3018/api/app18/health
+      interval: 20s
+    - name: app19
+      url: http://localhost:3019/api/app19/health
+      interval: 20s
+    - name: app20
+      url: http://localhost:3000/api/app20/health
+      interval: 20s
+    - name: app21
+      url: http://localhost:3001/api/app21/health
+      interval: 20s
+    - name: app22
+      url: http://localhost:3002/api/app22/health
+      interval: 20s
+    - name: app23
+      url: http://localhost:3003/api/app23/health
+      interval: 20s
+    - name: app24
+      url: http://localhost:3004/api/app24/health
+      interval: 20s
+    - name: app25
+      url: http://localhost:3005/api/app25/health
+      interval: 20s
+    - name: app26
+      url: http://localhost:3006/api/app26/health
+      interval: 20s
+    - name: app27
+      url: http://localhost:3007/api/app27/health
+      interval: 20s
+    - name: app28
+      url: http://localhost:3008/api/app28/health
+      interval: 20s
+    - name: app29
+      url: http://localhost:3009/api/app29/health
+      interval: 20s
+    - name: app30
+      url: http://localhost:3010/api/app30/health
+      interval: 20s
 SLO:
-  availability: 99.9
-  latency_p95: 300ms
+    availability: 99.9
+    latency_p95: 300ms
