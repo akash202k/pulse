@@ -36,7 +36,7 @@ func main() {
 	}
 
 	// Start API server
-	apiServer := api.New(":9090", store)
+	apiServer := api.New(":9090", store, cfg.Services)
 	go func() {
 		if err := apiServer.Start(); err != nil {
 			log.Printf("API server error: %v", err)

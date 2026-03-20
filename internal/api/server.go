@@ -5,13 +5,17 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/akash202k/pulse/internal/model"
+	"github.com/akash202k/pulse/internal/report"
 	"github.com/akash202k/pulse/internal/storage"
 )
 
 type Server struct {
-	addr    string
-	storage storage.Storage
-	server  *http.Server
+	addr      string
+	storage   storage.Storage
+	server    *http.Server
+	services  []model.Service
+	reportGen *report.ReportGenerator
 }
 
 type HealthResponse struct {
@@ -36,10 +40,12 @@ type SLOResponse struct {
 	LatencyActual      int64  `json:"latency_actual_ms"`
 }
 
-func New(addr string, store storage.Storage) *Server {
+func New(addr string, store storage.Storage, services []model.Service) *Server {
 	return &Server{
-		addr:    addr,
-		storage: store,
+		addr:      addr,
+		storage:   store,
+		services:  services,
+		reportGen: report.New(store),
 	}
 }
 
@@ -52,6 +58,9 @@ func (s *Server) Start() error {
 	mux.HandleFunc("/api/slo", s.sloStatus)
 	mux.HandleFunc("/api/slo/", s.sloStatusService)
 	mux.HandleFunc("/api/probes/", s.probeResults)
+	mux.HandleFunc("/api/report", s.complianceReport)
+	mux.HandleFunc("/api/report/json", s.complianceReportJSON)
+	mux.HandleFunc("/dashboard", s.dashboard)
 
 	s.server = &http.Server{
 		Addr:    s.addr,
@@ -198,4 +207,54 @@ func (s *Server) probeResults(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(results)
+}
+
+func (s *Server) complianceReport(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	report, err := s.reportGen.GenerateComplianceReport(s.services)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(report)
+}
+
+func (s *Server) complianceReportJSON(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	jsonData, err := s.reportGen.GenerateAndExportJSON(s.services)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Disposition", "attachment; filename=pulse-report.json")
+	w.Write(jsonData)
+}
+
+func (s *Server) dashboard(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	report, err := s.reportGen.GenerateComplianceReport(s.services)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	html := generateDashboardHTML(report)
+	w.Header().Set("Content-Type", "text/html; charset=utf-8")
+	w.Write([]byte(html))
 }
