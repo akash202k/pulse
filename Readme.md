@@ -156,3 +156,7 @@ pulse/
 ├── go.mod
 └── README.md
 ```
+
+# Dashboard
+
+image.png
