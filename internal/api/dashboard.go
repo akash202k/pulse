@@ -61,7 +61,7 @@ func generateDashboardHTML(rep *report.ComplianceReport) string {
 		complianceClass = "critical"
 	}
 
-	html := fmt.Sprintf(`<!DOCTYPE html>
+	html := `<!DOCTYPE html>
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
@@ -76,7 +76,7 @@ func generateDashboardHTML(rep *report.ComplianceReport) string {
 
 		body {
 			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-			background: linear-gradient(135deg, #667eea 0%%, #764ba2 100%);
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 			min-height: 100vh;
 			padding: 20px;
 		}
@@ -189,7 +189,7 @@ func generateDashboardHTML(rep *report.ComplianceReport) string {
 		.status-icon {
 			width: 30px;
 			height: 30px;
-			border-radius: 50%%;
+			border-radius: 50%;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -297,30 +297,30 @@ func generateDashboardHTML(rep *report.ComplianceReport) string {
 	<div class="container">
 		<header>
 			<h1>📊 Pulse - SLO Dashboard</h1>
-			<p>Generated: %s</p>
+			<p>Generated: ` + rep.GeneratedAt.Format("2006-01-02 15:04:05") + `</p>
 		</header>
 
 		<div class="summary">
 			<div class="summary-card">
 				<h3>Total Services</h3>
-				<div class="value">%d</div>
+				<div class="value">` + fmt.Sprintf("%d", rep.TotalServices) + `</div>
 			</div>
 			<div class="summary-card">
 				<h3>Services Meeting SLO</h3>
-				<div class="value" style="color: #10b981;">%d</div>
+				<div class="value" style="color: #10b981;">` + fmt.Sprintf("%d", rep.ServicesMetSLO) + `</div>
 			</div>
 			<div class="summary-card">
 				<h3>Services Failed SLO</h3>
-				<div class="value" style="color: #ef4444;">%d</div>
+				<div class="value" style="color: #ef4444;">` + fmt.Sprintf("%d", rep.ServicesFailedSLO) + `</div>
 			</div>
 			<div class="summary-card">
 				<h3>Compliance Rate</h3>
-				<div class="value compliance-rate %s">%.1f%%</div>
+				<div class="value compliance-rate ` + complianceClass + `">` + fmt.Sprintf("%.1f%%", rep.ComplianceRate) + `</div>
 			</div>
 		</div>
 
 		<div class="services-grid">
-			%s
+			` + servicesHTML + `
 		</div>
 
 		<footer>
@@ -333,15 +333,7 @@ func generateDashboardHTML(rep *report.ComplianceReport) string {
 		setTimeout(() => location.reload(), 60000);
 	</script>
 </body>
-</html>`,
-		rep.GeneratedAt.Format("2006-01-02 15:04:05"),
-		rep.TotalServices,
-		rep.ServicesMetSLO,
-		rep.ServicesFailedSLO,
-		complianceClass,
-		rep.ComplianceRate,
-		servicesHTML,
-	)
+</html>`
 
 	return html
 }
